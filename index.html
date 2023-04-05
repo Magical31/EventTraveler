@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hackathon</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+
+    <header>
+        <section class="title">
+            <div class="hambuger__menu__icon"></div>
+            <div class="logo">
+                <h1 class="logo__text"></h1>
+            </div>
+        </section>
+
+        <section class="address__search__bar">
+            <input type="text" class="search__bar">
+        </section>
+
+        <section class="account__options">
+            <div class="log_in">
+                <p class="account__info__text"></p>
+            </div>
+            <div class="sign_up">
+                <p class="account__info__text"></p>
+            </div>
+        </section>
+    </header>
+
+    <main>
+        <section class="filter__options">
+            <h2 class="slogan__text"></h2>
+
+            <input type="text" class="dropdown__filter">
+            
+        </section>
+
+        <section class="location__container">
+            <div class="eventbox__container">
+                <div class="indiviual__eventbox">
+                    <div class="image__container">
+                        <img src="#" class="event__image">
+                    </div>
+
+                    <div>
+                        <h2 class="event__title"></h2>
+                        <p class="event__subtext"></p>
+                        <p class="event__subtext"></p>
+                        <p class="event__catagory"></p>
+                        <p class="rating"></p>
+                    </div>
+                </div>
+                <div>
+                    <button class="add__more">
+                </div>
+            </div>
+        </section>
+
+        <section class="map__container">
+            <div id="map"></div>
+        </section>
+    <main>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBpWLR7MAou0z1hQ1jq9weBxasTGwKEb8&callback=initMap&libraries=places&v=weekly" defer></script>
+    <script src="mapping.js"></script>
+  </body>
+</html>
