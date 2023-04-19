@@ -3,66 +3,55 @@
   <head>
     <title>Hackathon</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://kit.fontawesome.com/7f95b5b687.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
 
-    <header>
-        <section class="title">
-            <div class="hambuger__menu__icon"></div>
-            <div class="logo">
-                <h1 class="logo__text"></h1>
-            </div>
-        </section>
+    <div class="site">
+        <header>
+            <section class="title">
+                <div class="burger_menu center_class"><i class="fa fa-bars"></i></div>
+                <div class="logo center_class">
+                    <h1 class="logo_text"><span class="thin">Event</span>Planner</h1>
+                </div>
+            </section>
 
-        <section class="address__search__bar">
-            <input type="text" class="search__bar">
-        </section>
+            <section class="address_search_bar center_class">
+                <div class="search"><i class="fa fa-search"></i></div>
+                <input type="text" class="search_bar" placeholder="Enter an address.." autocapitalize="on">
+            </section>
 
-        <section class="account__options">
-            <div class="log_in">
-                <p class="account__info__text"></p>
-            </div>
-            <div class="sign_up">
-                <p class="account__info__text"></p>
-            </div>
-        </section>
-    </header>
+            <section class="account_options center_class">
+                <div class="log_in center_class">
+                    <i class="fa fa-user"></i>
+                    <p>Log in</p>
+                </div>
+                <div class="sign_up center_class">
+                    <p>Sign up</p>
+                </div>
+            </section>
+        </header>
 
-    <main>
-        <section class="filter__options">
-            <h2 class="slogan__text"></h2>
+        <main>
+            <section class="filter_options">
+                <h2 class="slogan_text">Start Your Adventure!</h2>            
+            </section>
 
-            <input type="text" class="dropdown__filter">
-            
-        </section>
-
-        <section class="location__container">
-            <div class="eventbox__container">
-                <div class="indiviual__eventbox">
-                    <div class="image__container">
-                        <img src="#" class="event__image">
-                    </div>
-
-                    <div>
-                        <h2 class="event__title"></h2>
-                        <p class="event__subtext"></p>
-                        <p class="event__subtext"></p>
-                        <p class="event__catagory"></p>
-                        <p class="rating"></p>
+            <section class="location_container">
+                <div class="eventbox_container">
+                    <div class="add_container">
+                        <button class="add_more"><i class="fa fa-plus"></i></button>
                     </div>
                 </div>
-                <div>
-                    <button class="add__more">
-                </div>
-            </div>
-        </section>
+            </section>
+        </main>
 
-        <section class="map__container">
+        <div class="map_container">
             <div id="map"></div>
-        </section>
-    <main>
+        </div>
+    </div>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBpWLR7MAou0z1hQ1jq9weBxasTGwKEb8&callback=initMap&libraries=places&v=weekly" defer></script>
     <script src="mapping.js"></script>
