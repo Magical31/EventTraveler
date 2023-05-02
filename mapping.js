@@ -1,11 +1,11 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-//----- -- -- -- -- - - - - - -- - - - 
+let markers = [];
+let markerDoc = [];
 
-let markers;
 let places;
-let eventBlocks; // array for the newly created location drag and drop blocks.
+let eventBlocks;
 let map;
 
 function initMap() {
@@ -20,66 +20,105 @@ function initMap() {
 
     places = new google.maps.places.PlacesService(map);
 
-    function addMarker(locations) {
+    function addMarker(locations, t) {
 
         if (!locations.geometry || !locations.geometry.location) return;
 
         const marker = new google.maps.Marker({
             map, 
             position: locations.geometry.location,
+            info: t,
+        });
+
+        marker.addListener("click", () => {
+
+            console.log(marker.info.title)
+
+            const contentString =
+                `<button class='add_more' onclick='createEventbox("${marker.info.url}", "${marker.info.title}", "${marker.info.address}", "${marker.info.category}", ${marker.info.rating})'><i class='fa fa-plus'></i></button>`
+            ;                                       
+
+            const infowindow = new google.maps.InfoWindow({ 
+                content: contentString,
+            });
+
+            infowindow.open({
+                anchor: marker,
+                map,
+            });
+
+            console.log(marker.info);
         });
     }
 
-    const search = {
-        types: ["art_gallery"],
-        location: { lat: 40.751, lng: -73.985 },
-        radius: 100,
-    };
+    function searchNearby(keywords, address) {
 
-    places.nearbySearch(search, (results, status, pagination) => {
+        const search = {
+            types: ["point_of_interest"],
+            location: { lat: 40.751, lng: -73.985 },
+            radius: 4000,
+        };
 
-        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+        places.nearbySearch(search, (results, status, pagination) => {
 
-            console.log(results);
+        let markersArray = [];
 
-            for (let i = 0; i < results.length; i++) {
+            if (status === google.maps.places.PlacesServiceStatus.OK && results) {
 
-                addMarker(results[i]);
+                for (let i = 0; i < results.length; i++) {
+
+                    if (results[i].business_status == "CLOSED_TEMPORARILY" || !results[i].hasOwnProperty('photos')) {
+
+                        continue;
+                    }
+                    
+                    else if (results[i].business_status == "OPERATIONAL") {
+
+                        console.log(results[i]);
+
+                        markersArray[i] = {
+                            url: results[i].photos[0].getUrl(),
+                            title: results[i].name,
+                            address: results[i].vicinity,
+                            category: "Misc",
+                            rating: results[i].rating,
+                        }
+
+                        addMarker(results[i], markersArray[i]);
+                    }
+                }
+
+                const r = markersArray.filter(hasOwnProperty => true);
+                markers = markers.concat(r);
+
+                console.log(markers)
             }
-        }
-    });
-    
+        });
+    }
+
+    searchNearby();
 }
 
-function createEventbox(url, title, address, estTime, category, rating) {
+function createEventbox(url, title, address, category, rating) {
 
     let eventboxContainer = $(".add_container");
-    let minimumTime = estTime - 5;
-    let maxTime = estTime + 5;
-    let time = minimumTime + "—" + maxTime + " min";
 
     let eventbox = 
         "<div class='individual_eventbox'>" + 
-            "<div class='image_container'>" +
-                `<img src='${url}' class='event_image'>` +
-            "</div>" + 
+            "<div class='info_eventbox'>" +
+                "<div class='image_eventbox'>" +
+                    `<img src='${url}'>` +
+                "</div>" +  
 
-            "<div class='information_container'>" +
-                `<h2 class='event_title'>${title}</h2>` +
-                `<p class='event_subtext'>${address}</p>` +
-                `<p class='event_subtext'>${time}</p>` +
-                `<h4 class='event_category'>${category}</h4>` +
-                `<div class='rating_container'><p class='rating'>${rating}</p></div>` +
+                `<div class='title_eventbox'><p>${title}</p></div>` +
+                `<div class='address_eventbox'><p>${address}</p></div>` +
+                `<div class='category_eventbox'><p>${category}</p></div>` +
+                `<div class='rating_eventbox'><p>${rating}</p></div>` +
             "</div>" +
         "</div>"
     ;
 
     eventboxContainer.insertAdjacentHTML("beforebegin", eventbox);
 }
-
-$(".add_more i").addEventListener('click', function () {
-
-    createEventbox("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/d0/f4/07/escape-the-room-offers.jpg?w=1200&h=-1&s=1", "Escape Room", "123St Brooklyn", 55, "Fun", "2.2");
-})
 
 window.initMap = initMap;

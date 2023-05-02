@@ -220,6 +220,14 @@ main {
     grid-area: filter_options;
 }
 
+.filter_options h2 { 
+
+    font-family: var(--arial);
+    font-size: 20px;
+
+    opacity: .8;
+}
+
 .location_container {
 
     background-color: #c0c5ca;
@@ -231,23 +239,10 @@ main {
     grid-area: location_container;
 }
 
-.filter_options h2 { 
-
-    font-family: var(--arial);
-    font-size: 20px;
-
-    opacity: .8;
-}
-
 .eventbox_container {
 
-    display: flex; 
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-
-    width: 90%;
-    height: 350px;
+    width: 95%;
+    height: 400px;
 
     overflow: auto;
     overflow-x: hidden;
@@ -255,102 +250,136 @@ main {
 
 .individual_eventbox {
 
-    background-color: whitesmoke;
-    display: flex;
-    flex-direction: row;
+    height: 130px;
+    width: 100%;
 
-    height: 110px;
-    width: 85%;
-
-    margin-left: 40px;
-    margin-bottom: 15px;
-
-    box-shadow: none;
-
-    border-radius: 10px;
-
-    font-family: var(--segoe);
+    margin-bottom: 10px;
 }
 
-.image_container {
+.info_eventbox {
 
-    width: 160px;
-    height: 110px;
+    background-color: whitesmoke;
 
-    border-radius: 10px 0px 0px 10px;
+    height: 130px;
+    width: 87%;
+
+    margin: 0 auto;
+
+    display: grid; 
+    grid-auto-columns: 1fr; 
+    grid-template-columns: 150px 1.8fr 0.3fr; 
+    grid-template-rows: 1fr 0.6fr 1.4fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+    "Image Title Title"
+    "Image Address Address"
+    "Image Category Rating"; 
+
+    overflow: hidden;
+
+    border-radius: 10px;
+}
+
+.info_eventbox p{
+
+    object-fit: cover;
+    margin: 0;
+
+}
+
+.image_eventbox {
+
+    grid-area: Image;
+
+    height: 150px;
+    width: 150px;
+
+    margin: 0;
 
     overflow: hidden;
 }
 
-.event_image {
+.image_eventbox img {
 
     object-fit: cover;
-
-    width: 180px;
-    height: 110px;
 }
 
-.information_container {
+.title_eventbox {
+
+    grid-area: Title;
+
+    margin-left: 10px;
+    margin-bottom: 0;
+    height: 40px;
+
+    font-size: 25px;
+    font-family: var(--segoe);
+    font-weight: 500;
+
+    display: flex;
+    align-items: center;
+}
+
+.address_eventbox {
+
+    grid-area: Address;
+
+    margin-left: 10px;
+    margin-top: 0;
+
+    height: 60px;
+
+    font-size: 15px;
+    font-family: var(--segoe);
+    font-weight: 300;
+}
+
+.category_eventbox {
+
+    grid-area: Category;
+
+    margin-left: 10px;
+
+    height: 30px;
+
+    font-size: 15px;
+    font-family: var(--segoe);
+    font-weight: 400;
+
+    display: flex;
+    align-items: end;
+}
+
+.rating_eventbox {
+
+    grid-area: Rating;
+
+    height: 40px;
+    width: 40px;
+
+    font-size: 15px;
+    font-family: var(--segoe);
+    font-weight: 300;
     
-    width: 100%;
-
-    padding: none;
-
-    border-left: 2px rgba(0, 0, 0, 0.555) solid;
-}
-
-.event_title {
-
-    font-size: 18px;
-
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 0px;
-}
-
-.event_subtext {
-
-    font-size: 12px;
-
-    margin-left: 10px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-}
-
-.event_category {
-
-    font-size: 12px;
-
-    margin-top: 15px;
-    margin-left: 10px;
-}
-
-.rating_container {
-
-    position: relative;
-    top: -50px;
-    left: 255px;
-
-    background-color: #696969;
-
     display: flex;
     align-items: center;
     justify-content: center;
 
-    width: 35px;
-    height: 35px;
-
-    color: #f5f5f5;
-
+    background-color: #838383;
     border-radius: 100%;
-}
 
-.rating {
-
-    text-align: center;
+    margin-left: -10px;
+    margin-top: -10px;
 }
 
 .add_container {
+
+    background-color: whitesmoke;
+
+    height: 150px;
+    width: 87%;
+
+    margin: 0 auto;
 
     background-color: rgba(245, 245, 245, 0.411);
 
@@ -358,10 +387,8 @@ main {
     justify-content: center;
     align-items: center;
 
-    width: 85%;
     height: 110px;
 
-    margin-left: 40px;
     margin-bottom: 15px;
 
     box-shadow: none;
