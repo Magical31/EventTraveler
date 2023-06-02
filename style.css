@@ -446,20 +446,69 @@ main {
   }
   
   /* Track */
-  ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background: #f1f1f1; 
 
     border-radius: 5px;
-  }
+}
    
   /* Handle */
-  ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background: #969696; 
 
     border-radius: 5px;
-  }
+}
   
   /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     background: #838383; 
-  }
+}
+
+.marker_rating {
+
+    background-color: #b96767;
+    border-radius: 100%;
+    color: #FFFFFF;
+    font-size: 14px;
+    position: relative;
+    text-align: center;
+    height: 35px;
+    width: 35px;
+    padding-top: 9px;
+    box-sizing: border-box;
+    opacity: .9;
+}
+
+.marker_rating::after {
+
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 105%;
+    transform: translate(-50%, 0);
+    width: 0;
+    height: 5px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #c45454;
+}
+
+.marker_rating:hover {
+
+    background-color: #c44444;
+    opacity: 1;
+}
+
+.loc_name {
+
+    color: black;
+    
+    width: 100px;
+    margin-left: -35px;
+    margin-top: 25px;
+
+    font-size: 10px;
+    text-align: center;
+
+    pointer-events: none;
+}

@@ -2,101 +2,168 @@ const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
 let markers = [];
-let markerDoc = [];
+let searchResult;
 
-let places;
-let eventBlocks;
-let map;
+function hi() {
 
-function initMap() {
+    return "hello"
+}
 
-    const map = new google.maps.Map($("#map") , {
+async function initMap() {
 
-        zoom: 15,
+    const { Map } = await google.maps.importLibrary("maps");
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    const {Autocomplete} = await google.maps.importLibrary("places")
+    const {PlacesService} = await google.maps.importLibrary("places")
+    const {InfoWindow} = await google.maps.importLibrary("maps")
+
+    const map = new Map($("#map") , {
+
+        zoom: 15, // MAKE MAP HAVE A CERTAIN MAX
         center: {lat: 40.751, lng: -73.985},
         disableDefaultUI: true,
         mapId: "ff7d481aed307195",
     });
 
-    places = new google.maps.places.PlacesService(map);
-
     function addMarker(locations, t) {
 
         if (!locations.geometry || !locations.geometry.location) return;
 
-        const marker = new google.maps.Marker({
-            map, 
+        const markerRating = document.createElement("div"); // MARKER SHOWS RATING
+        markerRating.className = "marker_rating";
+        markerRating.textContent = t.rating;
+
+        const locName = document.createElement("p");
+        locName.className = "loc_name";
+        locName.textContent = t.title;
+
+        markerRating.append(locName)
+
+        const marker =  new AdvancedMarkerElement({
+            map,
             position: locations.geometry.location,
-            info: t,
+            content: markerRating,
         });
 
-        marker.addListener("click", () => {
+        
+        marker.addListener("click", () => { // The Info Window -- CSS REQUIRED
 
-            console.log(marker.info.title)
+            const btnCnt = document.createElement("button"); // MARKER SHOWS RATING
+            btnCnt.className = "add_more";
 
-            const contentString =
-                `<button class='add_more' onclick='createEventbox("${marker.info.url}", "${marker.info.title}", "${marker.info.address}", "${marker.info.category}", ${marker.info.rating})'><i class='fa fa-plus'></i></button>`
-            ;                                       
+            const btn = document.createElement("i");
+            btn.className = "fa fa-plus";
 
-            const infowindow = new google.maps.InfoWindow({ 
-                content: contentString,
+            btnCnt.addEventListener("click", function() {
+
+                createEventbox(t.url, t.title, t.address, t.category, t.rating);
+            });
+
+            btnCnt.append(btn);
+
+            const infowindow = new InfoWindow({ 
+                content: btnCnt,
             });
 
             infowindow.open({
                 anchor: marker,
                 map,
             });
-
-            console.log(marker.info);
         });
     }
 
-    function searchNearby(keywords, address) {
+    const input = $(".search_bar");
 
-        const search = {
-            types: ["point_of_interest"],
-            location: { lat: 40.751, lng: -73.985 },
-            radius: 4000,
-        };
+    const autocomplete = new Autocomplete(input, {
+        fields: ["geometry", "formatted_address", "name", "type"],
+    });
+
+    const sw = {lat: 40.621009, lng: -74.055318}
+    const ne = {lat: 40.841163, lng: -73.722197}
+
+    const corner = new google.maps.LatLngBounds(sw, ne)
+    autocomplete.setBounds(corner)
+
+    autocomplete.addListener("place_changed", () => {
+
+        let v = input.value;
+        let kw = v.substring(0, v.indexOf(","));
+
+        const place = autocomplete.getPlace();
+        let t = place.types[0];
+
+        if (!place.geometry || !place.geometry.location) {
+        return;
+        }
+    
+        if (place.geometry.viewport) {
+
+            map.fitBounds(place.geometry.viewport);
+            searchNearby(place, kw, t);
+            map.setZoom(15);
+        }
+    });
+
+    function searchNearby(l, kw, t) {
+
+        let search;
+
+        if (/\d/.test(kw) == true) {
+
+            search = {
+                type: t,
+                location: l.geometry.location,
+                radius: 5000,
+            };
+        } else {
+
+            search = {
+                keyword: kw,
+                location: l.geometry.location,
+                radius: 5000,
+            };
+        }
+
+        let places = new PlacesService(map);
 
         places.nearbySearch(search, (results, status, pagination) => {
 
-        let markersArray = [];
+            let markersArray = []
+            
+                if (status === google.maps.places.PlacesServiceStatus.OK && results) {
 
-            if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+                    for (let i = 0; i < results.length; i++) {
 
-                for (let i = 0; i < results.length; i++) {
+                        if (results[i].business_status == "CLOSED_TEMPORARILY" || !results[i].hasOwnProperty('photos')) {
 
-                    if (results[i].business_status == "CLOSED_TEMPORARILY" || !results[i].hasOwnProperty('photos')) {
-
-                        continue;
-                    }
-                    
-                    else if (results[i].business_status == "OPERATIONAL") {
-
-                        console.log(results[i]);
-
-                        markersArray[i] = {
-                            url: results[i].photos[0].getUrl(),
-                            title: results[i].name,
-                            address: results[i].vicinity,
-                            category: "Misc",
-                            rating: results[i].rating,
+                            continue;
                         }
 
-                        addMarker(results[i], markersArray[i]);
+                        else if (results[i].business_status == "OPERATIONAL") {
+
+                            markersArray[i] = {
+                                url: results[i].photos[0].getUrl(),
+                                title: results[i].name,
+                                address: results[i].vicinity,
+                                category: "Misc",
+                                rating: results[i].rating,
+                            }
+    
+                            addMarker(results[i], markersArray[i], i);
+                        }
+                    }
+
+                    searchResult = JSON.stringify(results, null, 4);
+
+                    console.log(results)
+
+                    if (results.length < 5) {
+                        
+                        searchNearby(l, "0", "point_of_interest")
                     }
                 }
-
-                const r = markersArray.filter(hasOwnProperty => true);
-                markers = markers.concat(r);
-
-                console.log(markers)
-            }
         });
     }
-
-    searchNearby();
 }
 
 function createEventbox(url, title, address, category, rating) {
@@ -121,4 +188,4 @@ function createEventbox(url, title, address, category, rating) {
     eventboxContainer.insertAdjacentHTML("beforebegin", eventbox);
 }
 
-window.initMap = initMap;
+initMap();
